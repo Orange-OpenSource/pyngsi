@@ -2,11 +2,11 @@ import sys
 import time
 import random
 import openpyxl
-import csv
 
 
 from pathlib import Path
 from loguru import logger
+from typing import Callable
 
 from pyngsi.sources.source import Source, Row
 
@@ -64,3 +64,14 @@ class SourceMicrosoftExcel(Source):
                 [str(cell.value) if cell.value else "" for cell in row])
             logger.debug(f"{self.provider=}{record=}")
             yield Row(self.provider, record)
+
+
+class SourceApi(Source):
+
+    def __init__(self, request_api: Callable, provider: str = "API"):
+        self.request_api = request_api
+        self.provider = provider
+
+    def __iter__(self):
+        for response in self.request_api():
+            yield Row(self.provider, response)
