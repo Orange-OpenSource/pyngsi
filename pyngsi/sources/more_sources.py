@@ -6,7 +6,7 @@ import openpyxl
 
 from pathlib import Path
 from loguru import logger
-from typing import Callable
+from typing import Callable, List
 
 from pyngsi.sources.source import Source, Row
 
@@ -68,10 +68,10 @@ class SourceMicrosoftExcel(Source):
 
 class SourceApi(Source):
 
-    def __init__(self, request_api: Callable, provider: str = "API"):
-        self.request_api = request_api
+    def __init__(self, call_api: Callable[..., List], provider: str = "api"):
+        self.call_api = call_api
         self.provider = provider
 
     def __iter__(self):
-        for response in self.request_api():
+        for response in self.call_api():
             yield Row(self.provider, response)

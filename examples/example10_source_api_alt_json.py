@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 
-# v2.1.9 introduces SourceApi to facilitate the creation of an agent that retrieves its data from an API
-# No need anymore to inherit from the Source class
-
+# Use SourceJson as an alternative to SourceApi
+# when incoming data is retrieved from a JSON API
 
 import requests
 from typing import List
 
 from pyngsi.agent import NgsiAgent
 from pyngsi.sources.source import Row
-from pyngsi.sources.more_sources import SourceApi
+from pyngsi.sources.source_json import SourceJson
 from pyngsi.sink import SinkStdout
 from pyngsi.ngsi import DataModel
 
@@ -41,18 +40,8 @@ def build_entity(row: Row) -> DataModel:
 
 
 def main():
-
-    # just provide SourceApi with your own function (that returns an array)
-
-    # default is to retrieve 5 commits
-    # override the default provider "api" with "github"
-    src = SourceApi(retrieve_latest_commits, "github")
-
-    # in case you want to retrieve 3 commits, you could use lambda
-    # src = SourceApi(lambda: retrieve_latest_commits(ncommits=3), "github")
-
-    # one could prefer to use the partial function from functools
-    # src = SourceApi(partial(retrieve_latest_commits, ncommits=3), "github")
+    json_response = retrieve_latest_commits(ncommits=3)
+    src = SourceJson(json_response, provider="github")
 
     # if you have an Orion server available, just replace SinkStdout() with SinkOrion()
     sink = SinkStdout()
