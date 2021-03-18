@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # This agent takes data from the standard input, performs a basic computation, eventually writes to the standard output.
 # Note : a Sink expects a NGSI DataModel class as input. If it is not the case it simply writes the string representation of its input

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-# Source subclass as an alternative to SourceApi
-# when you need more control
-# when you want a stateful source
+# You can use SourceJson when requesting JSON data from an API
 
 import requests
+from typing import List
 
 from pyngsi.agent import NgsiAgent
-from pyngsi.sources.source import Row, Source
+from pyngsi.sources.source import Row
+from pyngsi.sources.source_json import SourceJson
 from pyngsi.sink import SinkStdout
 from pyngsi.ngsi import DataModel
 
@@ -15,21 +15,16 @@ GH_URL = "https://api.github.com"
 GH_ENDPOINT = "/repos"
 
 
-class SourceGitHubCommits(Source):
-
-    def __init__(self, user: str, repo: str, ncommits: int = 5, provider: str = "github"):
-        self.ncommits = ncommits
-        self.provider = provider
-        self.url = f"{GH_URL}{GH_ENDPOINT}/{user}/{repo}/commits"
-        self.headers = {'Application': 'application/vnd.github.v3+json'}
-        self.params = {'per_page': ncommits}
-
-    def __iter__(self):
-        response = requests.get(
-            self.url, headers=self.headers, params=self.params)
-        response.raise_for_status()
-        for commit in response.json():
-            yield Row(self.provider, commit)
+def retrieve_latest_commits(user: str = "numpy", repo: str = "numpy", ncommits: int = 5) -> List:
+    url = f"{GH_URL}{GH_ENDPOINT}/{user}/{repo}/commits"
+    headers = {'Application': 'application/vnd.github.v3+json'}
+    params = {'per_page': ncommits}
+    response = requests.get(
+        url, headers=headers, params=params)
+    response.raise_for_status()
+    # returns the Python object parsed from the JSON string result (here an array)
+    # it's ok here because the API returns a JSON array
+    return response.json()
 
 
 def build_entity(row: Row) -> DataModel:
@@ -44,7 +39,9 @@ def build_entity(row: Row) -> DataModel:
 
 
 def main():
-    src = SourceGitHubCommits("numpy", "numpy")
+    response = retrieve_latest_commits(ncommits=3)
+    src = SourceJson(response, provider="github")
+
     # if you have an Orion server available, just replace SinkStdout() with SinkOrion()
     sink = SinkStdout()
     agent = NgsiAgent.create_agent(src, sink, process=build_entity)
