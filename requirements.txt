@@ -7,4 +7,5 @@ requests==2.25.1
 requests_toolbelt==0.9.1
 schedule==1.0.0
 shortuuid==1.0.1
+defusedxml==0.7.1
 openpyxl==3.0.7
