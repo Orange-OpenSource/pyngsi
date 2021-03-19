@@ -45,7 +45,7 @@ def test_source_json_path(mocker):
     {"fruit": "Lime", "size": "Medium", "color": "Yellow"} ] } }"""
     mock_open = mocker.mock_open(read_data=input_data)
     mocker.patch("builtins.open", mock_open)
-    src = Source.from_file("test.json", jsonpath=["dataset", "data"])
+    src = Source.from_file("test.json", jsonpath="dataset.data")
     rows: List[Row] = [x for x in src]
     assert len(rows) == 2
     assert rows[0].provider == "test.json"
