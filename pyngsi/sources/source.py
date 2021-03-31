@@ -26,7 +26,7 @@ from zipfile import ZipFile
 from io import TextIOWrapper
 from pathlib import Path
 
-from pyngsi.utils import stream_from
+from pyngsi.utils.stream import stream_from
 
 
 @dataclass(eq=True)
