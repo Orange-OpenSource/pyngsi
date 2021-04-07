@@ -156,8 +156,7 @@ class NgsiAgentPull(NgsiAgent):
     def close(self):
         logger.info("close NGSI agent")
         logger.info(self.status)
-        # logger.info(f"close source")
-        # self.source.close()
+        self.source.close()
         logger.info(f"close sink")
         self.sink.close()
 

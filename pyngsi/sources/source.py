@@ -42,6 +42,9 @@ class Row:
     record: Any = None
 
 
+ROW_NOT_SET = Row(None, None)
+
+
 class Source(Iterable):
     """
     A Source is a pull datasource : any datasource we can iterate on.
@@ -111,13 +114,13 @@ class Source(Iterable):
     @classmethod
     def from_glob(cls, pattern: str, provider: str = "user", **kwargs):
         sources = [Source.from_file(f) for f in glob.glob(pattern)]
-        return SourceMany(sources)   
+        return SourceMany(sources)
 
     @classmethod
     def from_globs(cls, patterns: Sequence[str], provider: str = "user", **kwargs):
         filenames = chain.from_iterable([glob.glob(p) for p in patterns])
         sources = [Source.from_file(f) for f in filenames]
-        return SourceMany(sources)        
+        return SourceMany(sources)
 
     @classmethod
     def register_extension(cls, ext: str, src, **kwargs):
@@ -141,6 +144,9 @@ class Source(Iterable):
         cls.unregister_extension("*")
 
     def reset(self):
+        pass
+
+    def close(self):
         pass
 
 
