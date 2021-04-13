@@ -7,7 +7,7 @@ from paho.mqtt import client as pahoclient
 from paho.mqtt.client import MQTTMessage, MQTTMessageInfo, MQTT_ERR_SUCCESS
 from shortuuid import uuid
 from loguru import logger
-from typing import Any, Callable
+from typing import Any, Callable, Literal
 
 from pyngsi.__init__ import __version__
 
@@ -36,7 +36,13 @@ class MqttConnectionError(MqttError):
 
 class MqttClient():
 
-    def __init__(self, host: str = "localhost", port: int = MQTT_DEFAULT_PORT, user: str = None, passwd: str = None, qos: int = 0, callback: Callable[[MQTTMessage], None] = None):
+    def __init__(self,
+                 host: str = "localhost",
+                 port: int = MQTT_DEFAULT_PORT,
+                 user: str = None,
+                 passwd: str = None,
+                 qos: Literal[0, 1, 2] = 0,
+                 callback: Callable[[MQTTMessage], None] = None):
         self.host = host
         self.port = port
         self.user = user
@@ -91,16 +97,18 @@ class MqttClient():
             logger.error(
                 f"[{self.id}][#{mid}] Failed to unsubscribe from topic {topic}")
 
-    def publish(self, topic: str, msg: str):
+    def publish(self, topic: str, msg: str) -> bool:
         if self._client is None:
             raise MqttNotConnectedError()
         status: MQTTMessageInfo = self._client.publish(topic, msg, self.qos)
         if status.rc == MQTT_ERR_SUCCESS:
             logger.debug(
                 f"[{self.id}][#{status.mid}] Message {msg} published to {topic}")
+            return True
         else:
             logger.error(
                 f"[{self.id}][#{status.mid}] Cannot publish {msg} to {topic} : RC={status.rc}")
+            return False
 
     def _on_connect(self, client: pahoclient, userdata: Any, flags: dict, rc: int):
         if rc == 0:

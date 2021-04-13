@@ -6,10 +6,12 @@ import signal
 from paho.mqtt.client import MQTTMessage
 from queue import SimpleQueue as Queue
 from loguru import logger
-from typing import Union, Sequence, Tuple
+from typing import Union, Sequence, Tuple, Literal
 
 from pyngsi.sources.source import Source, Row, ROW_NOT_SET as QUEUE_EOT
 from pyngsi.utils.mqttclient import MqttClient, MQTT_DEFAULT_PORT
+
+OneOrManyStrings = Union[str, Sequence[str]]
 
 
 class SourceMqtt(Source):
@@ -23,8 +25,8 @@ class SourceMqtt(Source):
                  host: str = "localhost",
                  port: int = MQTT_DEFAULT_PORT,
                  credentials: Tuple[str, str] = (None, None),
-                 topic: Union[str, Sequence[str]] = "#",  # all topics
-                 qos: int = 0  # no ack
+                 topic: OneOrManyStrings = "#",  # all topics
+                 qos: Literal[0, 1, 2] = 0  # no ack
                  ):
         """Returns a SourceMqtt instance.
 
@@ -32,8 +34,8 @@ class SourceMqtt(Source):
             host (str): Hostname or IP address of the remote broker. Defaults to "localhost".
             port (int): Network port of the server host to connect to. Defaults to 1883.
             credentials (str,str): Username and password used in broker authentication. Defaults to no auth.
-            topic (str): Topic (or list of topics) to subscribe to. Defaults to "#" (all topics).
-            qos (int) : QoS : 0, 1 or 2 according to the MQTT protocol. Defaults to 0 (no ack).
+            topic (OneOrManyStrings): Topic (or list of topics) to subscribe to. Defaults to "#" (all topics).
+            qos (Literal[0, 1, 2]) : QoS : 0, 1 or 2 according to the MQTT protocol. Defaults to 0 (no ack).
 
         """
         self.topic = topic
