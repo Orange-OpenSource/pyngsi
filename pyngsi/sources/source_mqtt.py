@@ -39,9 +39,9 @@ class SourceMqtt(Source):
 
         """
         self.topic = topic
-        self.queue: "Queue[Row]" = Queue()
+        self._queue: "Queue[Row]" = Queue()
         user, passwd = credentials
-        self.mcsub: MqttClient = MqttClient(host, port, user, passwd,
+        self._mcsub: MqttClient = MqttClient(host, port, user, passwd,
                                             qos, callback=self._callback)
         # install signal hooks
         try:
@@ -52,28 +52,28 @@ class SourceMqtt(Source):
             logger.warning(e)
 
     def __iter__(self):
-        self.mcsub.subscribe(self.topic)
+        self._mcsub.subscribe(self.topic)
         while True:
-            row: Row = self.queue.get(True)
+            row: Row = self._queue.get(True)
             if row == QUEUE_EOT:  # End Of Transmission
                 logger.info("Received EOT")
                 break
             yield row
-        self.mcsub.stop()
+        self._mcsub.stop()
 
     def _callback(self, msg: MQTTMessage):
         payload = str(msg.payload.decode("utf-8"))
-        self.queue.put(Row(msg.topic, payload))
+        self._queue.put(Row(msg.topic, payload))
 
     def _handle_signal(self, signum, frame):
         """Properly clean resources when a signal is received"""
         logger.info("Received SIGNAL : ")
         logger.info("Stopping loop...")
-        self.queue.put(QUEUE_EOT)
+        self._queue.put(QUEUE_EOT)
         time.sleep(1)
 
     def close(self):
         """Properly disconnect from MQTT broker and free resources
         """
-        self.queue.put(QUEUE_EOT)
-        self.mcsub.stop()
+        self._queue.put(QUEUE_EOT)
+        self._mcsub.stop()
