@@ -1,0 +1,20 @@
+host: localhost
+port: 1026
+secure: no # TLS
+
+# multi-tenancy
+# keep this section empty for no multi-tenancy
+tenant:
+  service:
+  service-path:
+
+# authentication
+# keep this section empty for no authentication
+# set either token for a permanent access token
+# or username and password to allow renewable access tokens
+# prefer environment variables here, see example below
+# password: ${ORION_PASSWD}
+auth:
+  token:
+  user:
+  passwd:

@@ -136,7 +136,8 @@ def test_sink_orion_status(requests_mock):
 def test_sink_orion_status_with_auth(requests_mock):
     sink = SinkOrion(token="00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff")
     requests_mock.get("http://127.0.0.1:1026/version",
-                      request_headers={'X-Auth-Token': '00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff'},
+                      request_headers={
+                          'X-Auth-Token': '00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff'},
                       json={'orion': {'version': '2.2.0-next'}})
     status = sink.status()
     assert status["orion"]["version"] == "2.2.0-next"
@@ -147,7 +148,36 @@ def test_sink_orion_status_with_auth_env(mocker, requests_mock):
         os.environ, {'ORION_TOKEN': '00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff'})
     sink = SinkOrion()
     requests_mock.get("http://127.0.0.1:1026/version",
-                      request_headers={'X-Auth-Token': '00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff'},
+                      request_headers={
+                          'X-Auth-Token': '00ff00ff00ff00ff00ff00ff00ff00ff00ff00ff'},
                       json={'orion': {'version': '2.2.0-next'}})
     status = sink.status()
     assert status["orion"]["version"] == "2.2.0-next"
+
+
+def test_sink_orion_load_config_basic():
+    config = {"host": "128.0.0.2", "port": 1127, "secure": True}
+    kwargs = SinkOrion._load_config_from_dict(config)
+    assert kwargs["hostname"] == "128.0.0.2"
+    assert kwargs["port"] == 1127
+    assert kwargs["secure"] == True
+    assert "service" not in kwargs
+    assert "servicepath" not in kwargs
+    assert "token" not in kwargs
+    assert "user" not in kwargs
+    assert "passwd" not in kwargs
+
+
+def test_sink_orion_load_config_complete():
+    config = {"host": "128.0.0.2", "port": 1127, "secure": True, "tenant": {
+        "service": "Fiware-Service-1", "service-path": "Fiware-ServicePath-2"},
+        "auth": {"user": "foo", "passwd": "bar"}
+    }
+    kwargs = SinkOrion._load_config_from_dict(config)
+    assert kwargs["hostname"] == "128.0.0.2"
+    assert kwargs["port"] == 1127
+    assert kwargs["secure"] == True
+    assert kwargs["service"] == "Fiware-Service-1"
+    assert kwargs["servicepath"] == "Fiware-ServicePath-2"
+    assert kwargs["user"] == "foo"
+    assert kwargs["passwd"] == "bar"

@@ -16,7 +16,7 @@ Other sinks such as SinkStdout or SinkFile are useful during the development sta
 import gzip
 import requests
 import os
-import copy
+import yaml
 
 from abc import ABC, abstractmethod
 from loguru import logger
@@ -222,7 +222,7 @@ class SinkHttp(Sink):
 class SinkOrion(SinkHttp):
     """Send to Orion Context Broker"""
 
-    def __init__(self, hostname="127.0.0.1", port="1026", secure=False, baseurl="/",
+    def __init__(self, hostname="127.0.0.1", port=1026, secure=False, baseurl="/",
                  post_endpoint="/v2/entities", post_query="options=upsert", status_endpoint="/version",
                  useragent=f"NgsiAgent v{version}", proxy=None,
                  token=None, service=None, servicepath=None):
@@ -259,3 +259,32 @@ class SinkOrion(SinkHttp):
             self.headers['Fiware-Service'] = service
         if servicepath is not None:
             self.headers['Fiware-ServicePath'] = servicepath
+
+    @staticmethod
+    def _load_config_from_dict(config: dict) -> dict:
+        kwargs = {}
+        if host := config.get("host"):
+            kwargs["hostname"] = host
+        if port := config.get("port"):
+            kwargs["port"] = port
+        if secure := config.get("secure"):
+            kwargs["secure"] = secure
+        if tenant := config.get("tenant"):
+            if service := tenant.get("service"):
+                kwargs["service"] = service
+            if servicepath := tenant.get("service-path"):
+                kwargs["servicepath"] = servicepath
+        if auth := config.get("auth"):
+            if token := auth.get("token"):
+                kwargs["token"] = token
+            elif user := auth.get("user"):
+                kwargs["user"] = user
+                kwargs["passwd"] = auth.get("passwd", "")
+        return kwargs
+
+    @classmethod
+    def from_config(cls, path: str = "orion.yml"):
+        with open(path) as file:
+            config = yaml.safe_load(file)
+            kwargs = cls._load_config_from_dict(config)
+            return cls(**kwargs)        

@@ -9,3 +9,4 @@ schedule==1.0.0
 shortuuid==1.0.1
 openpyxl==3.0.6
 paho-mqtt==1.5.1
+pyyaml==5.4.1
