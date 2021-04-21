@@ -4,6 +4,8 @@
 import pytest
 import os
 import gzip
+import pkg_resources
+
 from os.path import join
 from loguru import logger
 
@@ -181,3 +183,32 @@ def test_sink_orion_load_config_complete():
     assert kwargs["servicepath"] == "Fiware-ServicePath-2"
     assert kwargs["user"] == "foo"
     assert kwargs["passwd"] == "bar"
+
+
+def test_sink_orion_load_config_from_yaml():
+    filename = pkg_resources.resource_filename(__name__, "data/orion.yml")
+    kwargs = SinkOrion._load_config_from_yaml(filename)
+    assert kwargs["hostname"] == "orion.fiware.org"
+    assert kwargs["port"] == 1027
+    assert kwargs["secure"] == True
+    assert kwargs["servicepath"] == "Service-Path-1"
+    assert kwargs["user"] == "foo"
+    assert kwargs["passwd"] == "bar"
+
+
+def test_sink_orion_create_from_yaml_config():
+    filename = pkg_resources.resource_filename(__name__, "data/orion.yml")
+    sink = SinkOrion.from_config(filename)
+    assert sink.hostname == "orion.fiware.org"
+    assert sink.port == 1027
+    assert sink.protocol == "https"
+    assert sink.headers['Fiware-ServicePath'] == "Service-Path-1"
+    assert sink.user == "foo"
+    assert sink.passwd == "bar"
+
+
+def test_sink_orion_create_from_yaml_config_file_not_found():
+    filename = pkg_resources.resource_filename(
+        __name__, "data/orion-not-found.yml")
+    with pytest.raises(SinkException, match=r".*Cannot read config.*"):
+        sink = SinkOrion.from_config(filename)

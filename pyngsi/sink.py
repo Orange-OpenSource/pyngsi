@@ -225,11 +225,14 @@ class SinkOrion(SinkHttp):
     def __init__(self, hostname="127.0.0.1", port=1026, secure=False, baseurl="/",
                  post_endpoint="/v2/entities", post_query="options=upsert", status_endpoint="/version",
                  useragent=f"NgsiAgent v{version}", proxy=None,
-                 token=None, service=None, servicepath=None):
+                 token=None, user=None, passwd=None, 
+                 service=None, servicepath=None
+                 ):
         logger.debug("init SinkOrion")
         super().__init__(hostname, port, secure, baseurl,
                          post_endpoint, post_query, status_endpoint,
                          useragent, proxy)
+        self.user, self.passwd = user, passwd
         if 'X-Auth-Token' in self.headers:
             logger.info(
                 "A token has already been provided to the pyngsi framework.")
@@ -259,7 +262,7 @@ class SinkOrion(SinkHttp):
             self.headers['Fiware-Service'] = service
         if servicepath is not None:
             self.headers['Fiware-ServicePath'] = servicepath
-
+            
     @staticmethod
     def _load_config_from_dict(config: dict) -> dict:
         kwargs = {}
@@ -282,9 +285,18 @@ class SinkOrion(SinkHttp):
                 kwargs["passwd"] = auth.get("passwd", "")
         return kwargs
 
+    @staticmethod
+    def _load_config_from_yaml(path: str = "orion.yml") -> dict:
+        kwargs = {}
+        try:
+            with open(path) as file:
+                config = yaml.safe_load(file)
+                kwargs = SinkOrion._load_config_from_dict(config)
+        except Exception as e:
+            raise SinkException(f"Cannot read config from file {path}") from e
+        return kwargs
+
     @classmethod
     def from_config(cls, path: str = "orion.yml"):
-        with open(path) as file:
-            config = yaml.safe_load(file)
-            kwargs = cls._load_config_from_dict(config)
-            return cls(**kwargs)        
+        kwargs = SinkOrion._load_config_from_yaml(path)
+        return cls(**kwargs)
