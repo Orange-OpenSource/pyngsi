@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 """
 Sinks.
@@ -16,14 +15,13 @@ Other sinks such as SinkStdout or SinkFile are useful during the development sta
 import gzip
 import requests
 import os
-import yaml
 
 from abc import ABC, abstractmethod
 from loguru import logger
 from requests_toolbelt.utils import dump
 
 from pyngsi.__init__ import __version__ as version
-
+from pyngsi.utils import eyaml
 
 class Sink(ABC):
     """
@@ -290,7 +288,7 @@ class SinkOrion(SinkHttp):
         kwargs = {}
         try:
             with open(path) as file:
-                config = yaml.safe_load(file)
+                config = eyaml.load(file)
                 kwargs = SinkOrion._load_config_from_dict(config)
         except Exception as e:
             raise SinkException(f"Cannot read config from file {path}") from e
