@@ -28,7 +28,8 @@ class DataModel(dict):
 
     transient_timeout = None
 
-    def __init__(self, id: str, type: str, serializer: Callable = str):
+    def __init__(self, id: str, type: str, strict: bool = False, serializer: Callable = str):
+        self.strict = strict
         self.serializer = serializer
         self["id"] = id
         self["type"] = type
@@ -93,11 +94,21 @@ class DataModel(dict):
     def add_url(self, *args, **kwargs):
         self.add(isurl=True, *args, **kwargs)
 
-    def add_relationship(self, rel_name: str, ref_type: str, ref_id: str):
-        if not rel_name.startswith("ref"):
+    def add_relationship(self, rel_name: str, fq_ref_type: str, ref_id: str):
+        """Add Entity relationship
+
+        Args:
+            rel_name (str): the relation name (should start with "ref:")
+            fq_ref_type (str): the fully qualified type (including namespace), i.e. urn:ngsi-ld:Shelf
+            ref_id (str): the datamodel identifier
+
+        Raises:
+            NgsiException
+        """
+        if self.strict and not rel_name.startswith("ref"):
             raise NgsiException(
                 f"Bad relationship name : {rel_name}. Relationship attributes must use prefix 'ref'")
-        t, v = "Relationship", f"urn:ngsi-ld:{ref_type}:{ref_id}"
+        t, v = "Relationship", f"{fq_ref_type}:{ref_id}"
         self[rel_name] = {"value": v, "type": t}
 
     def add_address(self, value: dict):
