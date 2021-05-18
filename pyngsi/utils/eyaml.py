@@ -4,9 +4,10 @@ import yaml
 import re
 import os
 
+EMPTY_STRING = ""
 
 # pattern for global vars: look for ${word}
-_pattern = re.compile('.*?\${(\w+)}.*?')
+_pattern = re.compile(r'.*?\${(\w+)}.*?')
 _loader = yaml.SafeLoader
 
 
@@ -17,7 +18,7 @@ def _constructor_env_variables(loader, node):
         full_value = value
         for g in match:
             full_value = full_value.replace(
-                f"${{{g}}}", os.environ.get(g, g)
+                f"${{{g}}}", os.environ.get(g, EMPTY_STRING) # if var not set => default to empty string
             )
         return full_value
     return value

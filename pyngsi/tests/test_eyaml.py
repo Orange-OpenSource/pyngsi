@@ -31,6 +31,18 @@ def test_yaml_with_env(mocker):
                  'service': 'https://localhost/service', 'username': 'admin'}
 
 
+def test_yaml_with_env_but_var_not_set(mocker):
+    mocker.patch.dict(
+        os.environ, {'SERVICE_HOST': 'localhost'}) # env var SERVICE_PASSWORD not set
+    d = eyaml.load("""
+    config:
+    username: admin
+    password: ${SERVICE_PASSWORD}
+    service: https://${SERVICE_HOST}/service
+    """)
+    assert d == {'config': None, 'password': '',
+                 'service': 'https://localhost/service', 'username': 'admin'}
+
 def test_yaml_with_env_and_tags(mocker):
     mocker.patch.dict(
         os.environ, {'SERVICE_PASSWORD': 'secret', 'SERVICE_HOST': 'localhost'})
