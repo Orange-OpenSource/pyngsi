@@ -23,6 +23,7 @@ from requests_toolbelt.utils import dump
 from pyngsi.__init__ import __version__ as version
 from pyngsi.utils import eyaml
 
+
 class Sink(ABC):
     """
     Sink is an abstract class
@@ -194,7 +195,7 @@ class SinkHttp(Sink):
     def status(self) -> dict:
         logger.debug("ask http server status")
         try:
-            if 'Content-Type' in self.headers: # workaround unwanted Content-Type
+            if 'Content-Type' in self.headers:  # workaround unwanted Content-Type
                 headers = self.headers.copy()
                 del headers['Content-Type']
             else:
@@ -223,7 +224,7 @@ class SinkOrion(SinkHttp):
     def __init__(self, hostname="127.0.0.1", port=1026, secure=False, baseurl="/",
                  post_endpoint="/v2/entities", post_query="options=upsert", status_endpoint="/version",
                  useragent=f"NgsiAgent v{version}", proxy=None,
-                 token=None, user=None, passwd=None, 
+                 token=None, user=None, passwd=None,
                  service=None, servicepath=None
                  ):
         logger.debug("init SinkOrion")
@@ -260,7 +261,7 @@ class SinkOrion(SinkHttp):
             self.headers['Fiware-Service'] = service
         if servicepath is not None:
             self.headers['Fiware-ServicePath'] = servicepath
-            
+
     @staticmethod
     def _load_config_from_dict(config: dict) -> dict:
         kwargs = {}
@@ -297,4 +298,9 @@ class SinkOrion(SinkHttp):
     @classmethod
     def from_config(cls, path: str = "orion.yml"):
         kwargs = SinkOrion._load_config_from_yaml(path)
+        return cls(**kwargs)
+
+    @classmethod
+    def from_dict(cls, config: dict):
+        kwargs = SinkOrion._load_config_from_dict(config)
         return cls(**kwargs)
