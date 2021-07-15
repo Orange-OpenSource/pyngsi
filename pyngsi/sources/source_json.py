@@ -15,7 +15,7 @@ from pyngsi.sources.source import Row, Source
 
 
 class SourceJson(Source):
-    """Read JSON formatted data from Standard Input"""
+    """Read JSON formatted data from JSON object"""
 
     def __init__(self, input: str, provider: str = "user", jsonpath: str = None):
         self.json_obj = input
@@ -24,8 +24,9 @@ class SourceJson(Source):
 
     def __iter__(self):
         obj = self.json_obj
-        if self.path:
-            obj = self.jsonpath(self.path)
+        path=self.path.split('.') if self.path else None
+        if path:
+            obj = self._jsonpath(path)
 
         if isinstance(obj, list):
             for j in obj:
@@ -33,7 +34,7 @@ class SourceJson(Source):
         else:
             yield Row(self.provider, obj)
 
-    def jsonpath(self, path: List):
+    def _jsonpath(self, path: List):
         obj = self.json_obj
         for p in path:
             if isinstance(p, int):

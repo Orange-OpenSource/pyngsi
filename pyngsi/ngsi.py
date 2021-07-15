@@ -11,8 +11,20 @@ from collections.abc import Sequence, Callable
 
 ONE_WEEK = 7*86400
 
+# https://fiware-orion.readthedocs.io/en/master/user/forbidden_characters/index.html
+FORBIDDEN_CHARACTERS = "<>\"'=;()"
 
-class NgsiException(Exception):
+# https://jsapi.apiary.io/previews/null/introduction/specification/field-syntax-restrictions
+ID_FIELDS_FORBIDDEN_CHARACTERS = "&?/#"
+RESERVED_KEYWORDS = ("id", "type", "geo:distance",
+                     "dateCreated", "dateModified", "dateExpires", "*")
+
+
+class NgsiError(Exception):
+    pass
+
+
+class NgsiRestrictionViolationError(NgsiError):
     pass
 
 
@@ -44,8 +56,33 @@ class DataModel(dict):
     def unset_transient(cls):
         cls.transient_timeout = None
 
+    @staticmethod
+    def enforce_general_restrictions(name: str, value: str):
+        if 1 in [c in value for c in FORBIDDEN_CHARACTERS]:
+            raise NgsiRestrictionViolationError(
+                f"Forbidden character found in field {name}")
+
+    @staticmethod
+    def enforce_id_restrictions(name: str):
+        if 1 in [c in name for c in ID_FIELDS_FORBIDDEN_CHARACTERS]:
+            raise NgsiRestrictionViolationError(
+                f"Forbidden character found in field {name}")
+        l = len(name)
+        if l < 1:
+            raise NgsiRestrictionViolationError(
+                f"{name} length must be at least 1")
+        elif l > 256:
+            raise NgsiRestrictionViolationError(
+                f"{name} length must not exceed 256")
+        if name in RESERVED_KEYWORDS:
+            raise NgsiRestrictionViolationError(
+                f"{name} uses a reserved keyword")
+
     def add(self, name: str, value: Any,
             isdate: bool = False, isurl: bool = False, urlencode=False, metadata: dict = {}):
+        if self.strict:
+            self.enforce_id_restrictions(name)
+            self.enforce_general_restrictions(name, value)
         if isinstance(value, str):
             if isdate:
                 t = "DateTime"
@@ -72,14 +109,14 @@ class DataModel(dict):
             try:
                 location = Point((lon, lat))
             except Exception as e:
-                raise NgsiException(f"Cannot create geojson field : {e}")
+                raise NgsiError(f"Cannot create geojson field : {e}")
             t, v = "geo:json", location
         elif isinstance(value, Sequence):
             t, v = "Array", value
         elif isinstance(value, dict):
             t, v = "Property", value
         else:
-            raise NgsiException(
+            raise NgsiError(
                 f"Cannot map {type(value)} to NGSI type. {name=} {value=}")
         self[name] = {"value": v, "type": t}
         if metadata:
@@ -106,7 +143,7 @@ class DataModel(dict):
             NgsiException
         """
         if self.strict and not rel_name.startswith("ref"):
-            raise NgsiException(
+            raise NgsiError(
                 f"Bad relationship name : {rel_name}. Relationship attributes must use prefix 'ref'")
         t, v = "Relationship", f"{fq_ref_type}:{ref_id}"
         self[rel_name] = {"value": v, "type": t}

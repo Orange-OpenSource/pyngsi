@@ -1,3 +1,12 @@
+# pyngsi 2.1.9
+## July 15, 2021
+
+- Added SourceMqtt to retrieve incoming data from a MQTT server by subscribing to given topic(s)
+- Added SourceFunc to avoid subclassing Source in most cases (i.e. request an API)
+- Added yaml config file management : for Orion and your agent needs
+- Added strict mode to enforce NGSI field and id syntax restrictions
+- Updated dependencies versions
+
 # pyngsi 2.1.8
 ## March 3, 2021
 

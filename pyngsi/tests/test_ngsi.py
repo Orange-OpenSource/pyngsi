@@ -6,7 +6,7 @@ import pytest
 from datetime import datetime, timedelta, timezone
 from geojson import Point
 
-from pyngsi.ngsi import DataModel, NgsiException, unescape, ONE_WEEK
+from pyngsi.ngsi import DataModel, NgsiError, NgsiRestrictionViolationError, unescape, ONE_WEEK
 
 
 def test_create():
@@ -105,13 +105,13 @@ def test_add_location_from_geojson():
 
 def test_add_location_invalid():
     m = DataModel("id", "type")
-    with pytest.raises(NgsiException, match=r".*JSON compliant.*"):
+    with pytest.raises(NgsiError, match=r".*JSON compliant.*"):
         m.add("location", ('A', -0.5667))
 
 
 def test_cannot_map_ngsi_type():
     m = DataModel("id", "type")
-    with pytest.raises(NgsiException, match=r".*Cannot map.*"):
+    with pytest.raises(NgsiError, match=r".*Cannot map.*"):
         m.add("unknown", None)
 
 
@@ -154,7 +154,7 @@ def test_add_relationship():
 
 def test_add_relationship_bad_ref():
     m = DataModel("id", "type", strict=True)
-    with pytest.raises(NgsiException, match=r".*Bad relationship.*"):
+    with pytest.raises(NgsiError, match=r".*Bad relationship.*"):
         m.add_relationship("store", "Shelf", "001")
 
 
@@ -208,3 +208,39 @@ def test_unset_implicit_transient():
     assert DataModel.transient_timeout is None
     m = DataModel("id", "type")
     assert m.json() == r'{"id": "id", "type": "type"}'
+
+
+def test_enforce_general_restrictions():
+    m = DataModel("id", "type", strict=True)
+    with pytest.raises(NgsiRestrictionViolationError):
+        m.add("projectName", "P<ixel")
+
+
+def test_enforce_id_restrictions_forbidden_char():
+    m = DataModel("id", "type", strict=True)
+    with pytest.raises(NgsiRestrictionViolationError):
+        m.add("project&Name", "Pixel")
+
+
+def test_enforce_id_restrictions_max_length_exceeded():
+    m = DataModel("id", "type", strict=True)
+    with pytest.raises(NgsiRestrictionViolationError):
+        m.add("projectName"+'-'*256, "Pixel")
+
+
+def test_enforce_id_restrictions_length_too_short():
+    m = DataModel("id", "type", strict=True)
+    with pytest.raises(NgsiRestrictionViolationError):
+        m.add("", "Pixel")
+
+
+def test_enforce_id_restrictions_reserved_keyword():
+    m = DataModel("id", "type", strict=True)
+    with pytest.raises(NgsiRestrictionViolationError):
+        m.add("id", "Pixel")
+
+
+def test_strict_mode():
+    m = DataModel("id", "type", strict=True)
+    with pytest.raises(NgsiRestrictionViolationError):
+        m.add("id", "Pixel")

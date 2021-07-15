@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 # This agent takes data from a sample source, builds NGSI entities, eventually writes to a given Sink.
 # https://fiware-orion.readthedocs.io/en/2.0.0/user/walkthrough_apiv2/index.html#entity-creation
@@ -19,18 +18,11 @@ def build_entity(row: Row) -> DataModel:
     return m
 
 
-def side_effect(row, sink, datamodel):
-    m = DataModel(
-        id=f"Building:MainBuilding:Room:{datamodel['id']}", type="Room")
-    sink.write(m.json())
-    return 1 # number of entities created in the side_effect function
-
-
 def main():
-    src = SourceSampleOrion()
+    src = SourceSampleOrion() # source provided with the framework
     # if you have an Orion server available, just replace SinkStdout() with SinkOrion()
     sink = SinkStdout()
-    agent = NgsiAgent.create_agent(src, sink, process=build_entity, side_effect=side_effect)
+    agent = NgsiAgent.create_agent(src, sink, process=build_entity)
     agent.run()
     agent.close()
 

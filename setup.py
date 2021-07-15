@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import pathlib
 import setuptools
 
 with open("README.md", "r") as fh:
@@ -9,12 +8,12 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyngsi",
-    version="2.1.8.5",
+    version="2.1.9",
     description="NGSI Python framework intended to build a Fiware NGSI Agent",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/pixel-ports/pyngsi",
-    author="Fabien Battello",
+    author="Orange OpenSource",
     author_email="fabien.battello@orange.com",
     license="Apache 2.0",
     classifiers=[
@@ -29,7 +28,8 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     include_package_data=False,
     install_requires=["loguru", "requests", "requests-toolbelt", "shortuuid",
-                      "more_itertools", "geojson", "flask", "cherrypy", "schedule", "openpyxl", "paho-mqtt", "pyyaml"],
+                      "more_itertools", "geojson", "flask", "cherrypy", "schedule",
+                      "defusedxml", "openpyxl", "paho-mqtt", "pyyaml"],
     test_requires=["pytest", "pytest-mock", "requests-mock", "pytest-flask"],
     python_requires=">=3.8"
 )

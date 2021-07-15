@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 
 from pyngsi.sources.source import Source
 from pyngsi.sources.more_sources import SourceMicrosoftExcel

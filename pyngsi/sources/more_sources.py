@@ -2,11 +2,11 @@ import sys
 import time
 import random
 import openpyxl
-import csv
 
 
 from pathlib import Path
 from loguru import logger
+from typing import Callable, List
 
 from pyngsi.sources.source import Source, Row
 
@@ -64,3 +64,20 @@ class SourceMicrosoftExcel(Source):
                 [str(cell.value) if cell.value else "" for cell in row])
             logger.debug(f"{self.provider=}{record=}")
             yield Row(self.provider, record)
+
+
+class SourceFunc(Source):
+    """A SourceFunc receives its incoming data through a given user function
+
+        The user function is passed as an argument at init time.
+        In many cases it avoids subclassing the Source class.
+        For example it facilitates the creation of an agent that retrieves its data from an API.
+    """
+
+    def __init__(self, func: Callable[..., List], provider: str = "api"):
+        self.func = func
+        self.provider = provider
+
+    def __iter__(self):
+        for response in self.func():
+            yield Row(self.provider, response)
