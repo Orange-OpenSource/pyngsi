@@ -8,11 +8,11 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyngsi",
-    version="2.1.9",
+    version="2.1.9.1",
     description="NGSI Python framework intended to build a Fiware NGSI Agent",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pixel-ports/pyngsi",
+    url="https://github.com/Orange-OpenSource/pyngsi",
     author="Orange OpenSource",
     author_email="fabien.battello@orange.com",
     license="Apache 2.0",

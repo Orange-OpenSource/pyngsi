@@ -2,12 +2,11 @@
 
 [![PyPI Latest Release](https://img.shields.io/pypi/v/pyngsi)](https://pypi.org/project/pyngsi/)
 [![License badge](https://img.shields.io/github/license/pixel-ports/pyngsi)](https://opensource.org/licenses/Apache-2.0)
-[![Build badge](https://img.shields.io/travis/pixel-ports/pyngsi)](https://travis-ci.org/pixel-ports/pyngsi/)
-[![Code coverage](https://img.shields.io/codecov/c/github/pixel-ports/pyngsi/master)](https://codecov.io/gh/pixel-ports/pyngsi)
+[![Build badge](https://img.shields.io/travis/pixel-ports/pyngsi)](https://travis-ci.org/Orange-OpenSource/pyngsi/)
+[![Code coverage](https://img.shields.io/codecov/c/github/pixel-ports/pyngsi/master)](https://codecov.io/gh/Orange-OpenSource/pyngsi)
 [![Python version](https://img.shields.io/pypi/pyversions/pyngsi)](https://pypi.org/project/pyngsi/)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/pixel-ports/pyngsi-tutorial/master)
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/pixel-port/pyngsi-tutorial/master)
 [![Powered by Fiware](https://img.shields.io/badge/powered%20by-Fiware-orange.svg?style=flat&colorA=E1523D&colorB=007D8A)](https://www.fiware.org/)
-<!--[![Package Status](https://img.shields.io/pypi/status/pixel-ports)](https://pypi.org/project/pyngsi/)-->
 
 ## What is it ?
 
@@ -26,7 +25,7 @@ Writing a [NGSI](https://fiware.github.io/specifications/ngsiv2/stable) agent th
 
 ## Where to get it
 The source code is currently hosted on GitHub at :
-https://github.com/pixel-ports/pyngsi
+https://github.com/Orange-OpenSource/pyngsi
 
 Binary installer for the latest released version is available at the [Python
 package index](https://pypi.org/project/pyngsi).
