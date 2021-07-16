@@ -1,3 +1,7 @@
+# pyngsi 2.1.9.1
+## July 16, 2021
+
+- Transfered Pypi ownership from pixel-ports to Orange-OpenSource
 # pyngsi 2.1.9
 ## July 15, 2021
 
