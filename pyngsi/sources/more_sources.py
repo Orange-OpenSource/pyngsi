@@ -2,7 +2,7 @@ import sys
 import time
 import random
 import openpyxl
-
+import pandas as pd
 
 from pathlib import Path
 from loguru import logger
@@ -81,3 +81,16 @@ class SourceFunc(Source):
     def __iter__(self):
         for response in self.func():
             yield Row(self.provider, response)
+
+
+class SourceDataFrame(Source):
+    """A SourceDataFrame takes its incoming data from a pandas DataFrame
+    """
+
+    def __init__(self, df: pd.DataFrame, provider: str = "DataFrame"):
+        self.df = df
+        self.provider = provider
+
+    def __iter__(self):
+        for row in self.df.itertuples():
+            yield Row(self.provider, row)

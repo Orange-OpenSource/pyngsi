@@ -1,3 +1,7 @@
+# pyngsi 2.1.10
+## July 23, 2021
+
+- Added SourceDataFrame : a Source that takes its incoming data from a Pandas dataframe
 # pyngsi 2.1.9.1
 ## July 16, 2021
 
