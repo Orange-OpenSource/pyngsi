@@ -29,7 +29,7 @@ setuptools.setup(
     include_package_data=False,
     install_requires=["loguru", "requests", "requests-toolbelt", "shortuuid",
                       "more_itertools", "geojson", "flask", "cherrypy", "schedule",
-                      "defusedxml", "openpyxl", "paho-mqtt", "pyyaml"],
+                      "defusedxml", "openpyxl", "paho-mqtt", "pyyaml", "pandas"],
     test_requires=["pytest", "pytest-mock", "requests-mock", "pytest-flask"],
     python_requires=">=3.8"
 )
