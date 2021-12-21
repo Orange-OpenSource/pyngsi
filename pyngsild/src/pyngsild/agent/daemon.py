@@ -62,6 +62,10 @@ class Daemon(BaseAgent):
         super().__init__(sink, process)
         self.status = Status()
 
+    @classmethod
+    def from_agent():
+        pass
+
     async def trigger(
         self, src: Source
     ):  # a Daemon server will have to create a source then call this method

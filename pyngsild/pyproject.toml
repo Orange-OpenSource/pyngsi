@@ -17,6 +17,7 @@ xmltodict = "^0.12.0"
 openpyxl = "^3.0.9"
 paho-mqtt = "^1.6.1"
 shortuuid = "^1.0.8"
+schedule = "^1.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
