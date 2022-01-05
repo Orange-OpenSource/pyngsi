@@ -132,8 +132,6 @@ class ManagedDaemon(Daemon):
     def run(self):
         self.status.starttime = datetime.now()
         self.status.state = State.RUNNING
-        # self.config.setup_event_loop()
-        # self.loop = asyncio.get_event_loop()
         self.thread = threading.Thread(target=self._loopwebadmin)
         self.thread.start()
 
@@ -157,7 +155,9 @@ class ManagedDaemon(Daemon):
 
 class HttpAgent(ManagedDaemon):
     def __init__(
-        self, sink: Sink = SinkStdout(), process: Callable = lambda row: row.record
+        self, 
+        sink: Sink = SinkStdout(), 
+        process: Callable[[Row], None] = lambda row: row.record
     ):
         super().__init__(sink, process)
 
