@@ -26,7 +26,6 @@ from .agent import Agent
 
 logger = logging.getLogger(__name__)
 
-# TODO : run the whole thing backgroung using a thread !!
 # TODO : add a ThreadPoolExecutor to deal with NGSI API requests
 
 
@@ -38,7 +37,7 @@ class UNIT(Enum):
 
 
 class Scheduler(ManagedDaemon):
-    """Poll takes an agent and polls at periodic intervals."""
+    """Scheduler takes an agent and polls at periodic intervals."""
 
     def __init__(
         self,

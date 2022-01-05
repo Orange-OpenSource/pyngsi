@@ -41,7 +41,7 @@ class MqttAgent(ManagedDaemon):
     def __init__(
         self,
         sink: Sink = SinkStdout(),
-        process: Callable = lambda row: row.record,
+        process: Callable[[Row]] = lambda row: row.record,
         host: str = "localhost",
         port: int = MQTT_DEFAULT_PORT,
         credentials: tuple[str, str] = (None, None),
