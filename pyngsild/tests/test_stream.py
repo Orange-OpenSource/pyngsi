@@ -12,7 +12,7 @@
 
 import pkg_resources
 
-from pyngsild.source.source import Row, Source, SourceStream, SourceStdin, SourceSingle
+from pyngsild.source import Row, Source, SourceStream, SourceStdin, SourceSingle
 from pyngsild.source.moresources import SourceSample
 from pyngsild.utils.stream import stream_from
 

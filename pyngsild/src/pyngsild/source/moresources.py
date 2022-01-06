@@ -11,7 +11,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from __future__ import annotations
-from json.decoder import JSONDecodeError
 from os import PathLike
 
 import sys
@@ -32,7 +31,7 @@ if TYPE_CHECKING:
 from functools import reduce
 from pathlib import Path
 
-from .source import Source, Row
+from . import Source, Row
 
 logger = logging.getLogger(__name__)
 

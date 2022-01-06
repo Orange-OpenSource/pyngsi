@@ -21,8 +21,8 @@ from typing import Callable
 from dataclasses import dataclass
 from enum import Enum
 
-from .daemon import ManagedDaemon, State
-from .agent import Agent
+from . import ManagedDaemon, State
+from .. import Agent
 
 logger = logging.getLogger(__name__)
 

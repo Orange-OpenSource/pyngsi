@@ -4,7 +4,7 @@ import pytest
 import threading
 
 from pyngsild.source.sourcemqtt import SourceMqtt
-from pyngsild.source.source import Row
+from pyngsild.source import Row
 
 
 @pytest.fixture

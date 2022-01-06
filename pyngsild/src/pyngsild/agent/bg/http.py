@@ -16,9 +16,9 @@ from datetime import datetime
 from fastapi import File, UploadFile
 from typing import Callable, Any
 from anyio import Lock
-from pyngsild.source.source import Source, Row
+from pyngsild.source import Source, Row
 from pyngsild.sink import Sink, SinkStdout
-from .daemon import ManagedDaemon
+from . import ManagedDaemon
 
 logger = logging.getLogger(__name__)
 

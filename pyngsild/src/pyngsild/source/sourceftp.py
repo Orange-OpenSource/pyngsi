@@ -16,7 +16,7 @@ import logging
 from typing import Tuple, List, Callable
 from pyngsild.ftpclient import FtpClient
 
-from pyngsild.source.source import Source
+from . import Source
 
 logger = logging.getLogger(__name__)
 

@@ -21,9 +21,9 @@ from watchgod.watcher import Change
 from asyncio import Event
 from pathlib import Path
 
-from .daemon import ManagedDaemon
+from . import ManagedDaemon
 from pyngsild.sink import Sink, SinkStdout
-from pyngsild.source.source import Source, Row
+from pyngsild.source import Source, Row
 
 logger = logging.getLogger(__name__)
 

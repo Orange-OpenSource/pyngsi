@@ -12,7 +12,7 @@
 
 import pkg_resources
 
-from pyngsild.source.source import Source
+from pyngsild.source import Source
 from pyngsild.source.moresources import SourceMicrosoftExcel
 
 

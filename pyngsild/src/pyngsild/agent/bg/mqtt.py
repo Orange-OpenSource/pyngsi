@@ -12,21 +12,18 @@
 
 
 import threading
-import time
-import signal
 import logging
 import anyio
-import asyncio
 
 from datetime import datetime
 from paho.mqtt.client import MQTTMessage
 from queue import SimpleQueue as Queue
 from typing import Literal, Callable
 
-from pyngsild.source.source import Row, ROW_NOT_SET as QUEUE_EOT, SourceSingle
+from pyngsild.source import Row, ROW_NOT_SET as QUEUE_EOT, SourceSingle
 from pyngsild.utils.mqttclient import MqttClient, MQTT_DEFAULT_PORT
 from pyngsild.sink import *
-from .daemon import ManagedDaemon
+from . import ManagedDaemon
 
 logger = logging.getLogger(__name__)
 

@@ -14,10 +14,10 @@ from typing import List
 
 from orionldclient import Entity
 
-from pyngsild.source.source import Row
+from pyngsild.source import Row
 from pyngsild.source.moresources import SourceSample
 from pyngsild.sink import Sink, SinkNull
-from pyngsild.agent.agent import Agent
+from pyngsild.agent import Agent
 from pyngsild.agent.stats import Stats
 from pyngsild.agent.processor import build_dummy_entity, build_sample_entity
 

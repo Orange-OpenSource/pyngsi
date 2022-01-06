@@ -10,7 +10,7 @@
 # Author: Fabien BATTELLO <fabien.battello@orange.com> et al.
 # SPDX-License-Identifier: Apache-2.0
 
-from ..source.source import Row
+from ..source import Row
 from orionldclient import Entity
 
 

@@ -14,7 +14,7 @@ import pkg_resources
 
 from typing import List
 
-from pyngsild.source.source import Row, Source
+from pyngsild.source import Row, Source
 from pyngsild.source.moresources import SourceJson
 
 

@@ -18,9 +18,9 @@ import logging
 from typing import Callable
 from datetime import datetime
 
-from .daemon import ManagedDaemon
+from . import ManagedDaemon
 from pyngsild.sink import Sink, SinkStdout
-from pyngsild.source.source import SourceSingle, Row
+from pyngsild.source import SourceSingle, Row
 
 logger = logging.getLogger(__name__)
 

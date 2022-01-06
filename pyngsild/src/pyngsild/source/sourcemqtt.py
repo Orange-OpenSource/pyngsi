@@ -19,7 +19,7 @@ from paho.mqtt.client import MQTTMessage
 from queue import SimpleQueue as Queue
 from typing import Union, Sequence, Tuple, Literal
 
-from pyngsild.source.source import Source, Row, ROW_NOT_SET as QUEUE_EOT
+from . import Source, Row, ROW_NOT_SET as QUEUE_EOT
 from pyngsild.utils.mqttclient import MqttClient, MQTT_DEFAULT_PORT
 
 logger = logging.getLogger(__name__)
