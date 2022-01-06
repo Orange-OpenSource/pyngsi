@@ -11,7 +11,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import threading
-import asyncio
 import anyio
 import uvicorn
 import logging
@@ -29,9 +28,9 @@ from uvicorn import server
 from uvicorn.config import LoopSetupType
 
 from pyngsild import __version__
-from .agent import BaseAgent, Agent
-from ..source.source import Source, SourceSingle, Row
-from ..sink import Sink, SinkStdout
+from pyngsild.agent.agent import BaseAgent, Agent
+from pyngsild.source.source import Source, SourceSingle, Row
+from pyngsild.sink import Sink, SinkStdout
 
 logger = logging.getLogger(__name__)
 
