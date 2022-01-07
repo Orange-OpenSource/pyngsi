@@ -8,7 +8,6 @@ license = "Apache 2.0"
 [tool.poetry.dependencies]
 python = "^3.10.1"
 more-itertools = "^8.10.0"
-orionldclient = {git = "https://github.com/Orange-OpenSource/python-orion-client.git"}
 fastapi = "^0.70.0"
 uvicorn = {extras = ["standard"], version = "^0.15.0"}
 python-multipart = "^0.0.5"
@@ -19,6 +18,7 @@ paho-mqtt = "^1.6.1"
 shortuuid = "^1.0.8"
 schedule = "^1.1.0"
 watchgod = "^0.7"
+orionldclient = {git = "https://github.com/Orange-OpenSource/python-orion-client.git"}
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"

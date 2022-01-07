@@ -10,6 +10,7 @@
 # Author: Fabien BATTELLO <fabien.battello@orange.com> et al.
 # SPDX-License-Identifier: Apache-2.0
 
+from __future__ import annotations
 from dataclasses import dataclass
 
 
@@ -26,7 +27,7 @@ class Stats:
     error: int = 0
     side_entities: int = 0
 
-    def __add__(self, o):
+    def __add__(self, o: Stats):
         return Stats(
             self.input + o.input,
             self.processed + o.processed,
@@ -36,7 +37,7 @@ class Stats:
             self.side_entities + o.side_entities,
         )
 
-    def __iadd__(self, o):
+    def __iadd__(self, o: Stats):
         self.input += o.input
         self.processed += o.processed
         self.output += o.output

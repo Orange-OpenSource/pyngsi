@@ -17,7 +17,6 @@ Sinks MUST respect the following protocol :
 Each Sink Class MUST implement write().
 Some Sinks MAY override close() if needed to free resources.
 
-SinkOrion is the one you will want to use in your project.
 Other sinks such as SinkStdout or SinkFile are useful during the development stage and for unit testing.
 """
 

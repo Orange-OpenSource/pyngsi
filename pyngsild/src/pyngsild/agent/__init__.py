@@ -18,6 +18,7 @@ from abc import ABCMeta, abstractmethod
 from .stats import Stats
 from ..source import Source, Row
 from ..sink import Sink, SinkStdout
+from ..sink.ngsi import SinkNgsi, SinkNgsiAsync
 from orionldclient import Entity
 
 logger = logging.getLogger(__name__)
@@ -66,8 +67,11 @@ class Agent(BaseAgent):
                     self.stats.filtered += 1
                     continue
                 self.stats.processed += 1
-                msg = e.to_json() if isinstance(e, Entity) else e
-                self.sink.write(msg)
+                if isinstance(self.sink, (SinkNgsi, SinkNgsiAsync)):
+                    self.sink.write(e)
+                else:
+                    msg = e.to_json() if isinstance(e, Entity) else e
+                    self.sink.write(msg)
                 self.stats.output += 1
                 if self.side_effect:
                     side_entities = self.side_effect(row, self.sink, e)

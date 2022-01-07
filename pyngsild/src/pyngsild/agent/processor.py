@@ -31,7 +31,7 @@ def build_sample_entity(row: Row) -> Entity:
     Here we consider the input as a CSV line.
     """
     id, temperature, pressure = row.record.split(";")
-    e = Entity("RoomTemperatureObserved", "Room1")
+    e = Entity("RoomTemperatureObserved", id)
     e.prop("temperature", float(temperature))
     e.prop("pressure", int(pressure))
     return e
