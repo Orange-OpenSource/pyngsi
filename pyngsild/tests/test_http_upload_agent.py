@@ -14,11 +14,11 @@ import pkg_resources
 
 from fastapi.testclient import TestClient
 
-from pyngsild.agent.bg.http import HttpAgent
+from pyngsild.agent.bg.http_upload import HttpUploadAgent
 from pyngsild.agent.processor import build_sample_entity
 from pyngsild.agent.stats import Stats
 
-agent = HttpAgent(process=build_sample_entity)
+agent = HttpUploadAgent(process=build_sample_entity)
 client = TestClient(agent.app)
 
 

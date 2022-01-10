@@ -13,31 +13,47 @@
 import logging
 
 from datetime import datetime
-from fastapi import File, UploadFile
+from pydantic import BaseModel
 from typing import Callable, Any
 from anyio import Lock
-from pyngsild.source import Source, Row
+from pyngsild.source import SourceSingle, Row
+from orionldclient.model.entity import Entity
 from pyngsild.sink import Sink, SinkStdout
 from . import ManagedDaemon
 
 logger = logging.getLogger(__name__)
 
 
-class HttpAgent(ManagedDaemon):
+class RoomObserved(BaseModel):
+    room: int
+    temperature: int
+    pressure: float
+
+
+def process(row: Row) -> Entity:
+    room: RoomObserved = row.record
+    e = Entity("RoomTemperatureObserved", room["room"])
+    e.prop("temperature", room["temperature"])
+    e.prop("pressure", room["pressure"])
+    return e
+
+
+class HttpRestAgent(ManagedDaemon):
     def __init__(
         self,
         sink: Sink = SinkStdout(),
         process: Callable[[Row], None] = lambda row: row.record,
+        endpoint: str = "/rooms/",
     ):
         super().__init__(sink, process)
+        self.endpoint = endpoint
 
-        @self.app.post("/uploadfile/", status_code=201)
-        async def create_upload_file(file: UploadFile = File(...)):
-            logger.info(file.filename)
+        @self.app.post(self.endpoint)
+        async def process(room: RoomObserved):
             lock = Lock()
             async with lock:
                 self.status.lastcalltime = datetime.now()
                 self.status.calls += 1
-            src = Source.from_file(file.filename, fp=file.file)
+            src = SourceSingle(Row(room))
             await self.trigger(src)
-            return {"filename": file.filename}
+            return room
